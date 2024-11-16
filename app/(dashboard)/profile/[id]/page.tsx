@@ -5,10 +5,12 @@ import Post from '@/components/dashboard/post';
 import { useActiveAccount, useReadContract } from 'thirdweb/react';
 import { contract } from '@/utils/contracts';
 import { useUserContext } from '@/context/UserContext';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function ProfilePage() {
   const account = useActiveAccount();
+  const { id } = useParams();
   const { walletUser, isUserLoading } = useUserContext();
   const router = useRouter();
 
@@ -16,30 +18,42 @@ export default function ProfilePage() {
     contract,
     method:
       'function getPostByUser(address _user) view returns ((string title, string body, string files, string featuredImage, address userId, uint256 id)[])',
-    params: [account?.address as string],
+    params: [id as string],
   });
 
+  const { data: user, isPending: isUserPending } = useReadContract({
+    contract,
+    method:
+      'function getUser(address _user) view returns ((address wallet, string name, string bio, address[] followers, address[] following))',
+    params: [id as string],
+  });
+
+  if (isUserLoading) return <div>Loading...</div>;
+  console.log(walletUser);
+
   return (
-    <div className='col-span-8'>
-      <div className='sticky top-0 p-4 text-black bg-white/80 backdrop-blur-md'>
-        <h1 className='text-xl font-bold'>My Profile</h1>
+    <div className=''>
+      <div className='sticky top-0 p-4 text-black'>
+        <h1 className='text-xl font-bold'>Profile</h1>
       </div>
       {/* Posts */}
       <Cardd
-        followerscount={walletUser?.followers.length}
-        followingcount={walletUser?.following.length}
-        handle={walletUser?.wallet}
-        bio={walletUser?.bio}
-        user={walletUser?.name}
+        followerscount={user?.followers.length}
+        followingcount={user?.following.length}
+        handle={user?.userId}
+        bio={user?.bio}
+        user={user?.name}
         walletUser={walletUser}
       />
-      <p className='flex mt-1 ml-4 text-xl text-black font-semiold'>Posts</p>
+      <p className='flex justify-center mt-1 text-xl text-black'>Posts</p>
 
       <div>
         {posts?.map((post: any) => (
           <Post
+            title={post.title}
             content={post.body}
             handle={walletUser?.userId}
+            time='3h'
             user={walletUser?.name}
           />
         ))}

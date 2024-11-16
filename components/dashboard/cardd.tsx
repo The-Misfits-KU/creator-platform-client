@@ -1,41 +1,80 @@
 import React from 'react';
-import { Button, Avatar, Card, CardBody } from '@nextui-org/react';
-import {
-  MessageCircle,
-  Repeat2,
-  Heart,
-  Share,
-  MessageSquare,
-} from 'lucide-react';
+import { Button } from '@nextui-org/react';
+import { MessageSquare, PlusSquare } from 'lucide-react';
+import { MediaRenderer } from 'thirdweb/react';
+import { client } from '@/services/thirdweb';
+import { contract } from '@/constants/contract';
+import { prepareContractCall } from 'thirdweb';
+import { useSendTransaction } from 'thirdweb/react';
 
-const Cardd = ({ user, handle, job, followerscount, followingcount }: any) => (
-  <Card className='bg-purple mb-2 cursor-pointer rounded-none border-b px-12 py-4 text-black shadow-none transition-all'>
-    <CardBody className='flex w-full flex-row items-center justify-between gap-8'>
-      <Avatar src='/api/placeholder/32/32' className='h-24 w-24' />
+const Cardd = ({
+  user,
+  handle,
+  bio,
+  followerscount,
+  followingcount,
+  profileImage,
+  walletUser,
+}: any) => {
+  const { mutate: sendTransaction } = useSendTransaction();
 
-      <div className='flex-1'>
-        <div className='mb-2 flex items-center gap-4'>
-          <span className='text-3xl font-bold'>{user}</span>
-          <span className='text-3xl text-default-500'>{handle}</span>
+  const followProfile = () => {
+    const transaction = prepareContractCall({
+      contract,
+      method: 'function followUser(address _userToFollow)',
+      params: [handle as string],
+    });
+    sendTransaction(transaction);
+  };
+
+  console.log(walletUser, handle);
+
+  return (
+    <div className='px-12 py-4 mb-2 text-black transition-all rounded-none shadow-none cursor-pointer bg-purple'>
+      <div className='flex flex-row items-center justify-between w-full gap-8'>
+        <div className='w-24 h-24 bg-gray-300 rounded-full'>
+          {profileImage && (
+            <MediaRenderer
+              client={client}
+              src={profileImage}
+              className='w-24 h-24 rounded-full'
+            />
+          )}
         </div>
+        <div className='flex-1'>
+          <div className='flex flex-col mb-2'>
+            <div className='text-xl font-bold'>{user}</div>
+            <div className='text-sm text-default-500'>{handle}</div>
+          </div>
 
-        <div className='mb-2 flex items-center gap-4'>
-          <span className='text-2xl text-default-500'>{job}</span>
+          <div className='flex items-center gap-4 mb-2'>
+            <span className='text-default-500'>{bio}</span>
+          </div>
+
+          <div className='flex items-center gap-4 mb-2'>
+            <span className='text-xl text-default-500'>Followers</span>
+            <span className='text-xl text-default-500'>{followerscount}</span>
+            <span className='text-xl text-default-500'>Following</span>
+            <span className='text-xl text-default-500'>{followingcount}</span>
+          </div>
+          <div className='flex gap-x-2'>
+            {/* {walletUser.address !== handle && (
+              <Button
+                onClick={followProfile}
+                className='text-white rounded-full shadow-lg h-9 w-9 bg-purple-600/80 backdrop-blur-sm hover:bg-purple-700/80'
+              >
+                <PlusSquare className='w-6 h-6' /> Follow
+              </Button>
+            )} */}
+
+            <Button className='text-white rounded-full shadow-lg h-9 w-9 bg-purple-600/80 backdrop-blur-sm hover:bg-purple-700/80'>
+              <MessageSquare className='w-6 h-6' />
+            </Button>
+          </div>
         </div>
-
-        <div className='mb-2 flex items-center gap-4'>
-          <span className='text-xl text-default-500'>Followers</span>
-          <span className='text-xl text-default-500'>{followerscount}</span>
-          <span className='text-xl text-default-500'>Following</span>
-          <span className='text-xl text-default-500'>{followingcount}</span>
-        </div>
-
-        <Button className='h-9 w-9 rounded-full bg-purple-600/80 text-white shadow-lg backdrop-blur-sm hover:bg-purple-700/80'>
-          <MessageSquare className='h-6 w-6' />
-        </Button>
       </div>
-    </CardBody>
-  </Card>
-);
+    </div>
+  );
+};
 
 export default Cardd;

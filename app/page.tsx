@@ -15,19 +15,20 @@ import {
   NavbarContent,
   NavbarItem,
   Button,
-  Link,
   Card,
 } from '@nextui-org/react';
 
 import { motion } from 'framer-motion';
 import { ConnectButton, lightTheme } from 'thirdweb/react';
 import { client } from '@/services/thirdweb';
-import { createWallet, inAppWallet } from "thirdweb/wallets";
- 
+import { createWallet } from 'thirdweb/wallets';
+import { useUserContext } from '@/context/UserContext';
+import { useRouter } from 'next/navigation';
+
 const wallets = [
-  createWallet("io.metamask"),
-  createWallet("com.coinbase.wallet"),
-  createWallet("me.rainbow"),
+  createWallet('io.metamask'),
+  createWallet('com.coinbase.wallet'),
+  createWallet('me.rainbow'),
 ];
 
 // You would need to add these SVG files to your project
@@ -42,9 +43,9 @@ const Character1 = () => (
       repeat: Infinity,
       ease: 'easeInOut',
     }}
-    className='h-64 w-64'
+    className='w-64 h-64'
   >
-    <svg viewBox='0 0 200 200' className='h-full w-full'>
+    <svg viewBox='0 0 200 200' className='w-full h-full'>
       {/* Simple character shape for example */}
       <circle cx='100' cy='70' r='50' fill='#9C27B0' />
       <rect x='85' y='120' width='30' height='60' fill='#9C27B0' />
@@ -63,9 +64,9 @@ const Character2 = () => (
       repeat: Infinity,
       ease: 'easeInOut',
     }}
-    className='h-64 w-64'
+    className='w-64 h-64'
   >
-    <svg viewBox='0 0 200 200' className='h-full w-full'>
+    <svg viewBox='0 0 200 200' className='w-full h-full'>
       {/* Simple character shape for example */}
       <circle cx='100' cy='70' r='50' fill='#2196F3' />
       <rect x='85' y='120' width='30' height='60' fill='#2196F3' />
@@ -75,6 +76,7 @@ const Character2 = () => (
 
 export default function DigitalMuseum() {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const router = useRouter();
 
   const handleWalletConnect = async () => {
     try {
@@ -91,6 +93,16 @@ export default function DigitalMuseum() {
       console.error('Error connecting wallet:', error);
     }
   };
+
+  const { walletUser, isUserLoading } = useUserContext();
+  console.log('Wallet User:', walletUser);
+  console.log('Is User Loading:', isUserLoading);
+
+  // redirect to profile page if user is already signed in
+  if (walletUser) {
+    alert('User already signed in');
+    router.push('/dashboard');
+  }
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100'>
@@ -119,8 +131,8 @@ export default function DigitalMuseum() {
                   maxHeight: '50px',
                 },
               }}
-              onConnect={(account) => {
-                window.location.href = '/dashboard';
+              onConnect={() => {
+                console.log('Wallet Connected');
               }}
               signInButton={{
                 className: 'bg-purple-600/80 text-white rounded-2xl',
@@ -130,9 +142,8 @@ export default function DigitalMuseum() {
           </NavbarItem>
         </NavbarContent>
       </Navbar>
-
       {/* Hero Section */}
-      <main className='container mx-auto px-6 py-12'>
+      <main className='container h-screen p-6 mx-auto'>
         <div className='flex flex-col items-center justify-between gap-12 lg:flex-row'>
           {/* Left side content */}
           <motion.div
@@ -151,14 +162,14 @@ export default function DigitalMuseum() {
             <div className='flex gap-4'>
               <Button
                 size='lg'
-                className='bg-purple-600/80 text-white backdrop-blur-sm hover:bg-purple-700/80'
+                className='text-white bg-purple-600/80 backdrop-blur-sm hover:bg-purple-700/80'
               >
                 Connect Account
               </Button>
               <Button
                 size='lg'
                 variant='bordered'
-                className='border-purple-600/50 text-purple-800'
+                className='text-purple-800 border-purple-600/50'
               >
                 Learn More
               </Button>
@@ -172,7 +183,7 @@ export default function DigitalMuseum() {
             transition={{ duration: 0.8 }}
             className='relative h-[500px] flex-1'
           >
-            <div className='absolute left-0 top-0'>
+            <div className='absolute top-0 left-0'>
               <Character1 />
             </div>
             <div className='absolute bottom-0 right-0'>
@@ -192,12 +203,12 @@ export default function DigitalMuseum() {
               }}
               className='absolute right-1/3 top-1/3'
             >
-              <Card className='h-64 w-48 border border-white/30 bg-white/20 backdrop-blur-lg'>
+              <Card className='w-48 h-64 border border-white/30 bg-white/20 backdrop-blur-lg'>
                 <div className='p-4'>
-                  <div className='mb-4 h-32 w-full rounded-lg bg-purple-400/20' />
+                  <div className='w-full h-32 mb-4 rounded-lg bg-purple-400/20' />
                   <div className='space-y-2'>
-                    <div className='h-4 w-3/4 rounded bg-purple-400/20' />
-                    <div className='h-4 w-1/2 rounded bg-purple-400/20' />
+                    <div className='w-3/4 h-4 rounded bg-purple-400/20' />
+                    <div className='w-1/2 h-4 rounded bg-purple-400/20' />
                   </div>
                 </div>
               </Card>
@@ -206,7 +217,7 @@ export default function DigitalMuseum() {
         </div>
 
         {/* Features Section */}
-        <div className='mt-24 grid gap-8 md:grid-cols-3'>
+        <div className='grid gap-8 md:grid-cols-3'>
           {[
             {
               title: 'Decentralized Curation',
@@ -230,7 +241,7 @@ export default function DigitalMuseum() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.2 }}
             >
-              <Card className='border border-white/30 bg-white/20 p-6 backdrop-blur-lg'>
+              <Card className='p-6 border border-white/30 bg-white/20 backdrop-blur-lg'>
                 <h3 className='mb-2 text-xl font-semibold text-purple-800'>
                   {feature.title}
                 </h3>

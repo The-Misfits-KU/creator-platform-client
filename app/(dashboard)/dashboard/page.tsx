@@ -7,6 +7,7 @@ import {
   BarChart2,
   Calendar,
 } from 'lucide-react';
+import Link from 'next/link';
 import { useReadContract, useActiveAccount } from 'thirdweb/react';
 import { Spinner } from '@nextui-org/react';
 import { contract } from '@/utils/contracts';
@@ -20,14 +21,15 @@ export default function Home() {
       'function getUserFeed(address _user) view returns ((string title, string body, string files, string featuredImage, address userId, uint256 id)[])',
     params: [account?.address as string],
   });
+
   return (
-    <div className='col-span-8 border-x'>
-      <div className='sticky top-0 border-b bg-white/80 p-4 text-black backdrop-blur-md'>
+    <div className='col-span-8'>
+      <div className='sticky top-0 p-4 text-black bg-white/80 backdrop-blur-md'>
         <h1 className='text-xl font-bold'>Home</h1>
       </div>
-      <div className='m-4 rounded-2xl border-b bg-white p-4'>
+      <div className='p-4 m-4 bg-white border border-gray-300 rounded-2xl'>
         <div className='flex gap-4'>
-          <Avatar className='h-12 w-12' src='/api/placeholder/48/48' />
+          <Avatar className='w-12 h-12' src='/api/placeholder/48/48' />
           <div className='flex-1'>
             <Input
               classNames={{
@@ -37,7 +39,7 @@ export default function Home() {
               placeholder="What's on your mind?"
               variant='bordered'
             />
-            <div className='mt-4 flex justify-between'>
+            <div className='flex justify-between mt-4'>
               <div className='flex gap-2'>
                 <Button isIconOnly size='sm' variant='light'>
                   <ImageIcon className='text-purple-500' size={20} />
@@ -56,7 +58,7 @@ export default function Home() {
                 </Button>
               </div>
               <Button
-                className='bg-purple-600 text-white'
+                className='text-white bg-purple-600'
                 color='primary'
                 size='sm'
               >
@@ -69,21 +71,18 @@ export default function Home() {
 
       {/* Posts */}
       {isFeedPending && (
-        <div className='m-4 flex items-center justify-center p-4 text-black'>
+        <div className='flex items-center justify-center p-4 m-4 text-black'>
           <Spinner />
         </div>
       )}
       {feed &&
         feed.map((post) => (
-          // <div key={post.id}>
-          //   <h2>{post.title}</h2>
-          //   <p>{post.body}</p>
-          //   <img src={post.featuredImage} alt={post.title} />
-          // </div>
-          <Post key={post.id} user={post.title} content={post.body} />
+          <Link href={`/feeds/${post.id}`}>
+            <Post key={post.id} user={post.title} content={post.body} />
+          </Link>
         ))}
       {!isFeedPending && feed?.length == 0 && (
-        <div className='m-4 flex items-center justify-center p-4 text-black'>
+        <div className='flex items-center justify-center p-4 m-4 text-black'>
           No Posts Found.
         </div>
       )}

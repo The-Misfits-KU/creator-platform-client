@@ -31,16 +31,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning lang='en'>
+    <html className='w-full h-full' suppressHydrationWarning lang='en'>
       <head />
       <body
         className={clsx(
-          'min-h-screen bg-background font-sans antialiased',
+          'h-full w-full bg-white font-sans antialiased',
           fontSans.variable
         )}
       >
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'dark' }}>
-          <main className='flex h-screen w-full flex-col'>{children}</main>
+          <main className='relative flex flex-col w-full h-full'>
+            {children}
+          </main>
         </Providers>
       </body>
     </html>
