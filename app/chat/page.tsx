@@ -1,12 +1,17 @@
-"use client";
-import Chat from "@/components/ai/chat";
-import { useChat } from "ai/react";
-import React, { useState } from "react";
+'use client';
+import { useChat } from 'ai/react';
+import React from 'react';
+
+import Chat from '@/components/ai/chat';
 
 const Page: React.FC = () => {
-  const [context, setContext] = useState<string[] | null>(null);
-  const { messages, input, handleInputChange, handleSubmit: originalHandleSubmit } = useChat();
-  
+  const {
+    messages,
+    input,
+    handleInputChange,
+    handleSubmit: originalHandleSubmit,
+  } = useChat();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await originalHandleSubmit();
@@ -14,9 +19,9 @@ const Page: React.FC = () => {
 
   return (
     <Chat
-      input={input}
       handleInputChange={handleInputChange}
       handleMessageSubmit={handleSubmit}
+      input={input}
       messages={messages}
     />
   );

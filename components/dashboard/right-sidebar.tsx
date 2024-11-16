@@ -1,57 +1,57 @@
-import { Button, User, Input, Avatar, Card, CardBody } from "@nextui-org/react";
-import { Search } from "lucide-react";
+import { Button, User, Input, Card, CardBody } from '@nextui-org/react';
+import { Search } from 'lucide-react';
 
 export default function RightSidebar() {
   return (
-    <div className="col-span-2 text-black m-4">
-      <Card className="bg-white mb-4">
+    <div className='col-span-2 m-4 text-black'>
+      <Card className='mb-4 bg-white'>
         <CardBody>
           <Input
-            placeholder="Search"
-            startContent={<Search size={18} />}
-            className="mb-4"
+            className='mb-4'
             classNames={{
-              input: "bg-white",
-              inputWrapper: "bg-white border-2 hover:border-purple-500",
+              input: 'bg-white',
+              inputWrapper: 'bg-white border-2 hover:border-purple-500',
             }}
+            placeholder='Search'
+            startContent={<Search size={18} />}
           />
         </CardBody>
       </Card>
 
-      <Card className="bg-white mb-4">
+      <Card className='mb-4 bg-white'>
         <CardBody>
-          <h2 className="text-xl font-bold mb-4">Trending Now</h2>
-          <div className="space-y-4">
+          <h2 className='mb-4 text-xl font-bold'>Trending Now</h2>
+          <div className='space-y-4'>
             {/* Trending items */}
-            {["Technology", "Sports", "Entertainment"].map((topic) => (
+            {['Technology', 'Sports', 'Entertainment'].map((topic) => (
               <div
                 key={topic}
-                className="hover:bg-purple-50 p-2 rounded-lg cursor-pointer"
+                className='cursor-pointer rounded-lg p-2 hover:bg-purple-50'
               >
-                <p className="text-sm text-gray-500">Trending in {topic}</p>
-                <p className="font-semibold">#TrendingTopic</p>
-                <p className="text-sm text-gray-500">10.5K posts</p>
+                <p className='text-sm text-gray-500'>Trending in {topic}</p>
+                <p className='font-semibold'>#TrendingTopic</p>
+                <p className='text-sm text-gray-500'>10.5K posts</p>
               </div>
             ))}
           </div>
         </CardBody>
       </Card>
 
-      <Card className="bg-white">
+      <Card className='bg-white'>
         <CardBody>
-          <h2 className="text-xl font-bold mb-4">Who to follow</h2>
-          <div className="space-y-4">
+          <h2 className='mb-4 text-xl font-bold'>Who to follow</h2>
+          <div className='space-y-4'>
             {/* Suggested users */}
-            {["John Doe", "Jane Smith", "Bob Wilson"].map((name) => (
-              <div key={name} className="flex items-center justify-between">
+            {['John Doe', 'Jane Smith', 'Bob Wilson'].map((name) => (
+              <div key={name} className='flex items-center justify-between'>
                 <User
-                  name={name}
-                  description="@username"
                   avatarProps={{
-                    src: "/api/placeholder/32/32",
+                    src: '/api/placeholder/32/32',
                   }}
+                  description='@username'
+                  name={name}
                 />
-                <Button size="sm" className="bg-purple-600 text-white">
+                <Button className='bg-purple-600 text-white' size='sm'>
                   Follow
                 </Button>
               </div>

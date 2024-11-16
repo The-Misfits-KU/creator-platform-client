@@ -1,6 +1,7 @@
-import React, { FormEvent, ChangeEvent } from "react";
-import Messages from "./messages";
-import { Message } from "ai/react";
+import React, { FormEvent, ChangeEvent } from 'react';
+import { Message } from 'ai/react';
+
+import Messages from './messages';
 
 interface Chat {
   input: string;
@@ -16,18 +17,18 @@ const Chat: React.FC<Chat> = ({
   messages,
 }) => {
   return (
-    <div id="chat" className="...">
+    <div className='...' id='chat'>
       <Messages messages={messages} />
       <>
-        <form onSubmit={handleMessageSubmit} className="...">
+        <form className='...' onSubmit={handleMessageSubmit}>
           <input
-            type="text"
-            className="..."
+            className='...'
+            type='text'
             value={input}
             onChange={handleInputChange}
           />
 
-          <span className="...">Press ⮐ to send</span>
+          <span className='...'>Press ⮐ to send</span>
         </form>
       </>
     </div>

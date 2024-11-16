@@ -1,7 +1,8 @@
-import { Pinecone } from "@pinecone-database/pinecone";
-import { HfInference } from '@huggingface/inference'
+import { Pinecone } from '@pinecone-database/pinecone';
+import { HfInference } from '@huggingface/inference';
 
-const hf = new HfInference(process.env.HF_TOKEN)
+const hf = new HfInference(process.env.HF_TOKEN);
+
 export async function queryPineconeVectorStore(
   client: Pinecone,
   indexName: string,
@@ -9,11 +10,10 @@ export async function queryPineconeVectorStore(
   query: string
 ): Promise<string> {
   const apiOutput = await hf.featureExtraction({
-    model: "mixedbread-ai/mxbai-embed-large-v1",
+    model: 'mixedbread-ai/mxbai-embed-large-v1',
     inputs: query,
   });
-  console.log(apiOutput);
-  
+
   const queryEmbedding = Array.from(apiOutput);
   // console.log("Querying database vector store...");
   const index = client.Index(indexName);
@@ -22,19 +22,21 @@ export async function queryPineconeVectorStore(
     vector: queryEmbedding as any,
     includeMetadata: true,
     // includeValues: true,
-    includeValues: false
+    includeValues: false,
   });
-
-  console.log(queryResponse);
-  
 
   if (queryResponse.matches.length > 0) {
     const concatenatedRetrievals = queryResponse.matches
-      .map((match,index) =>`\nClinical Finding ${index+1}: \n ${match.metadata?.chunk}`)
-      .join(". \n\n");
+      .map(
+        (match, index) =>
+          `\nClinical Finding ${index + 1}: \n ${match.metadata?.chunk}`
+      )
+      .join('. \n\n');
+
     return concatenatedRetrievals;
   } else {
-    return "<nomatches>";
+    return '<nomatches>';
   }
-  return "";
+
+  return '';
 }
