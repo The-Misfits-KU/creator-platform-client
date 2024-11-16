@@ -27,7 +27,7 @@ export default function MainContent({
     }, [active]);
 
     return (
-        <div className={`${collapsed ? "col-span-9" : "col-span-8"} border-x`}>
+        <div className={`${collapsed ? "col-span-9" : "col-span-8"} border-x bg-gradient-to-br from-purple-100 to-blue-100`}>
             <div className="sticky top-0 backdrop-blur-md bg-white/80 border-b p-4 text-black">
                 <h1 className="text-xl font-bold">{active}</h1>
             </div>
