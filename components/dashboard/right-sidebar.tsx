@@ -3,7 +3,7 @@ import { Search } from 'lucide-react';
 
 export default function RightSidebar() {
   return (
-    <div className='col-span-2 m-4 text-black'>
+    <div className='bg-purple-30 col-span-2 m-4 text-black'>
       <Card className='mb-4 bg-white'>
         <CardBody>
           <Input

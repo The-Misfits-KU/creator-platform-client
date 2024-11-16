@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     await index.upsert([
       {
         id: postId,
-        values: (await embedding).values , 
+        values: (await embedding).values,
         metadata: { postId, userId },
       },
     ]);

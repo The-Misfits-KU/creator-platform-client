@@ -1,230 +1,243 @@
 'use client';
 
-import { Button } from '@nextui-org/react';
+declare global {
+  interface Window {
+    ethereum?: {
+      request: (args: { method: string }) => Promise<string[]>;
+      isMetaMask?: boolean;
+    };
+  }
+}
+import React, { useState } from 'react';
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Button,
+  Link,
+  Card,
+} from '@nextui-org/react';
+
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Wallet } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useState } from 'react';
+import { Wallet2 } from 'lucide-react';
 
-export default function Home() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+// You would need to add these SVG files to your project
+const Character1 = () => (
+  <motion.div
+    animate={{
+      y: [0, -20, 0],
+      rotate: [-2, 2, -2],
+    }}
+    transition={{
+      duration: 4,
+      repeat: Infinity,
+      ease: 'easeInOut',
+    }}
+    className='h-64 w-64'
+  >
+    <svg viewBox='0 0 200 200' className='h-full w-full'>
+      {/* Simple character shape for example */}
+      <circle cx='100' cy='70' r='50' fill='#9C27B0' />
+      <rect x='85' y='120' width='30' height='60' fill='#9C27B0' />
+    </svg>
+  </motion.div>
+);
 
-  const nfts = [
-    {
-      id: 1,
-      title: 'SPACE GIRL',
-      image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202024-11-15%20210823-DV8Hej3NQkWMrKG8kjiAxIOnacMgMS.png',
-      timeRemaining: '12h:35m:20s',
-      highestBid: '5.25',
-    },
-    {
-      id: 2,
-      title: 'SPACE GIRL',
-      image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202024-11-15%20210823-DV8Hej3NQkWMrKG8kjiAxIOnacMgMS.png',
-      timeRemaining: '12h:35m:20s',
-      highestBid: '5.25',
-    },
-    {
-      id: 3,
-      title: 'SPACE GIRL',
-      image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202024-11-15%20210823-DV8Hej3NQkWMrKG8kjiAxIOnacMgMS.png',
-      timeRemaining: '12h:35m:20s',
-      highestBid: '5.25',
-    },
-  ];
+const Character2 = () => (
+  <motion.div
+    animate={{
+      y: [0, 20, 0],
+      rotate: [2, -2, 2],
+    }}
+    transition={{
+      duration: 5,
+      repeat: Infinity,
+      ease: 'easeInOut',
+    }}
+    className='h-64 w-64'
+  >
+    <svg viewBox='0 0 200 200' className='h-full w-full'>
+      {/* Simple character shape for example */}
+      <circle cx='100' cy='70' r='50' fill='#2196F3' />
+      <rect x='85' y='120' width='30' height='60' fill='#2196F3' />
+    </svg>
+  </motion.div>
+);
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % nfts.length);
-  };
+export default function DigitalMuseum() {
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
 
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + nfts.length) % nfts.length);
+  const handleWalletConnect = async () => {
+    try {
+      if (typeof window.ethereum !== 'undefined') {
+        const accounts = await window.ethereum.request({
+          method: 'eth_requestAccounts',
+        });
+        setIsWalletConnected(true);
+        console.log('Wallet connected:', accounts[0]);
+      } else {
+        alert('Please install MetaMask!');
+      }
+    } catch (error) {
+      console.error('Error connecting wallet:', error);
+    }
   };
 
   return (
-    <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 text-white'>
-      {/* Decorative stars */}
-      <div className='pointer-events-none absolute inset-0 overflow-hidden'>
-        {[...Array(20)].map((_, i) => (
+    <div className='min-h-screen bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100'>
+      {/* Navbar */}
+      <Navbar
+        className='border-b border-white/20 bg-white/30 backdrop-blur-md'
+        maxWidth='full'
+      >
+        <NavbarBrand>
           <motion.div
-            key={i}
-            animate={{
-              opacity: [0.2, 0.8, 0.2],
-              scale: [1, 1.2, 1],
-            }}
-            className='absolute h-1 w-1 rounded-full bg-white'
-            initial={{ opacity: 0.2 }}
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              delay: i * 0.2,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Navigation */}
-      <nav className='container mx-auto px-4 py-6'>
-        <div className='flex items-center justify-between'>
-          <Link className='flex items-center space-x-2' href='/'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500'>
-              <div className='h-6 w-6 rotate-45 transform rounded bg-white' />
-            </div>
-          </Link>
-
-          <div className='hidden space-x-8 md:flex'>
-            <Link
-              className='text-white transition-colors hover:text-purple-300'
-              href='/'
-            >
-              Home
-            </Link>
-            <Link
-              className='text-white transition-colors hover:text-purple-300'
-              href='/marketplace'
-            >
-              Marketplace
-            </Link>
-            <Link
-              className='text-white transition-colors hover:text-purple-300'
-              href='/about'
-            >
-              About
-            </Link>
-          </div>
-
-          <Button
-            className='border border-purple-400 bg-purple-600 px-6 text-white'
-            endContent={<Wallet className='h-4 w-4' />}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className='text-2xl font-bold text-purple-800'
           >
-            Connect Wallet
-          </Button>
-        </div>
-      </nav>
+            CryptoMuseum
+          </motion.div>
+        </NavbarBrand>
+        <NavbarContent className='hidden gap-4 sm:flex' justify='center'>
+          <NavbarItem>
+            <Link href='#' className='text-purple-800'>
+              Gallery
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <Link href='#' className='text-purple-800'>
+              Artists
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <Link href='#' className='text-purple-800'>
+              Collections
+            </Link>
+          </NavbarItem>
+        </NavbarContent>
+        <NavbarContent justify='end'>
+          <NavbarItem>
+            <Button
+              className='bg-purple-600/80 text-white backdrop-blur-sm hover:bg-purple-700/80'
+              variant='flat'
+              startContent={<Wallet2 size={20} />}
+              onClick={handleWalletConnect}
+            >
+              {isWalletConnected ? 'Connected' : 'Connect Wallet'}
+            </Button>
+          </NavbarItem>
+        </NavbarContent>
+      </Navbar>
 
       {/* Hero Section */}
-      <main className='container mx-auto px-4 pb-32 pt-16'>
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className='mb-16 text-center'
-          initial={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h1 className='mb-8 text-4xl font-bold tracking-wider md:text-6xl lg:text-7xl'>
-            DISCOVER, OR
-            <br />
-            UPLOAD CREATIONS
-          </h1>
-          <Button
-            className='bg-purple-500 px-8 py-6 text-lg text-white'
-            size='lg'
+      <main className='container mx-auto px-6 py-12'>
+        <div className='flex flex-col items-center justify-between gap-12 lg:flex-row'>
+          {/* Left side content */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className='flex-1 space-y-6'
           >
-            UPLOAD CREATIONS
-          </Button>
-        </motion.div>
+            <h1 className='text-5xl font-bold text-purple-800'>
+              Digital Art Meets Blockchain
+            </h1>
+            <p className='text-xl text-gray-700'>
+              Experience the future of art curation in our decentralized digital
+              museum. Own, showcase, and trade unique digital masterpieces.
+            </p>
+            <div className='flex gap-4'>
+              <Button
+                size='lg'
+                className='bg-purple-600/80 text-white backdrop-blur-sm hover:bg-purple-700/80'
+              >
+                Explore Gallery
+              </Button>
+              <Button
+                size='lg'
+                variant='bordered'
+                className='border-purple-600/50 text-purple-800'
+              >
+                Learn More
+              </Button>
+            </div>
+          </motion.div>
 
-        {/* Statistics */}
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className='mb-24 flex justify-center space-x-12 text-center md:space-x-24'
-          initial={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          <div>
-            <p className='text-3xl font-bold md:text-4xl'>9.5K</p>
-            <p className='text-sm text-purple-300'>ART WORK</p>
-          </div>
-          <div>
-            <p className='text-3xl font-bold md:text-4xl'>65K</p>
-            <p className='text-sm text-purple-300'>ARTIST</p>
-          </div>
-          <div>
-            <p className='text-3xl font-bold md:text-4xl'>90K+</p>
-            <p className='text-sm text-purple-300'>AUCTION</p>
-          </div>
-        </motion.div>
-
-        {/* NFT Carousel */}
-        <div className='relative mx-auto max-w-5xl'>
-          <div className='flex items-center justify-center gap-4'>
-            <button
-              aria-label='Previous slide'
-              className='absolute left-0 z-10 rounded-lg bg-purple-800/50 p-2 backdrop-blur-sm'
-              onClick={prevSlide}
-            >
-              <ChevronLeft className='h-6 w-6' />
-            </button>
-
-            <div className='flex items-center justify-center gap-4 overflow-hidden'>
-              {[-1, 0, 1].map((offset) => {
-                const index =
-                  (currentSlide + offset + nfts.length) % nfts.length;
-
-                return (
-                  <motion.div
-                    key={nfts[index].id}
-                    animate={{ opacity: 1, scale: offset === 0 ? 1.1 : 0.9 }}
-                    className={`relative h-96 w-72 overflow-hidden rounded-2xl ${
-                      offset === 0 ? 'z-10 scale-110' : 'opacity-60'
-                    }`}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <div className='absolute inset-0 bg-gradient-to-t from-purple-900/90 to-transparent' />
-                    <Image
-                      alt={nfts[index].title}
-                      className='rounded-2xl'
-                      layout='fill'
-                      objectFit='cover'
-                      src='/placeholder.svg'
-                    />
-                    <div className='absolute bottom-0 left-0 right-0 p-4 text-white'>
-                      <h3 className='mb-2 text-lg font-bold'>
-                        {nfts[index].title}
-                      </h3>
-                      <div className='flex items-center justify-between'>
-                        <div>
-                          <p className='text-sm text-purple-300'>
-                            Remaining Time
-                          </p>
-                          <p className='font-mono'>
-                            {nfts[index].timeRemaining}
-                          </p>
-                        </div>
-                        <div>
-                          <p className='text-sm text-purple-300'>Highest Bid</p>
-                          <p className='font-mono'>
-                            {nfts[index].highestBid} ETH
-                          </p>
-                        </div>
-                      </div>
-                      {offset === 0 && (
-                        <Button className='mt-4 w-full bg-purple-500 text-white'>
-                          PLACE A BID
-                        </Button>
-                      )}
-                    </div>
-                  </motion.div>
-                );
-              })}
+          {/* Right side animated characters */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className='relative h-[500px] flex-1'
+          >
+            <div className='absolute left-0 top-0'>
+              <Character1 />
+            </div>
+            <div className='absolute bottom-0 right-0'>
+              <Character2 />
             </div>
 
-            <button
-              aria-label='Next slide'
-              className='absolute right-0 z-10 rounded-lg bg-purple-800/50 p-2 backdrop-blur-sm'
-              onClick={nextSlide}
+            {/* Floating cards */}
+            <motion.div
+              animate={{
+                y: [-10, 10, -10],
+                rotate: [-5, 5, -5],
+              }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+              className='absolute right-1/3 top-1/3'
             >
-              <ChevronRight className='h-6 w-6' />
-            </button>
-          </div>
+              <Card className='h-64 w-48 border border-white/30 bg-white/20 backdrop-blur-lg'>
+                <div className='p-4'>
+                  <div className='mb-4 h-32 w-full rounded-lg bg-purple-400/20' />
+                  <div className='space-y-2'>
+                    <div className='h-4 w-3/4 rounded bg-purple-400/20' />
+                    <div className='h-4 w-1/2 rounded bg-purple-400/20' />
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Features Section */}
+        <div className='mt-24 grid gap-8 md:grid-cols-3'>
+          {[
+            {
+              title: 'Decentralized Curation',
+              description:
+                'Community-driven art curation powered by blockchain technology.',
+            },
+            {
+              title: 'Secure Ownership',
+              description:
+                'NFT-backed authenticity and proof of ownership for all artworks.',
+            },
+            {
+              title: 'Virtual Exhibitions',
+              description:
+                'Immersive digital exhibitions featuring global artists.',
+            },
+          ].map((feature, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.2 }}
+            >
+              <Card className='border border-white/30 bg-white/20 p-6 backdrop-blur-lg'>
+                <h3 className='mb-2 text-xl font-semibold text-purple-800'>
+                  {feature.title}
+                </h3>
+                <p className='text-gray-700'>{feature.description}</p>
+              </Card>
+            </motion.div>
+          ))}
         </div>
       </main>
     </div>
