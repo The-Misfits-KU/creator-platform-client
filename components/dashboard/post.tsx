@@ -3,14 +3,14 @@ import { Button, Avatar, Card, CardBody } from '@nextui-org/react';
 import { MessageCircle, Repeat2, Heart, Share } from 'lucide-react';
 
 const Post = ({ user, handle, time, content, engagement }: any) => (
-  <Card className="bg-white hover:bg-purple-50 cursor-pointer transition-all border-b rounded-2xl m-4 text-black bg-gradient-to-br from-purple-100 to-blue-100">
-    <CardBody className="flex flex-row gap-4">
-      <Avatar src="/api/placeholder/32/32" className="w-12 h-12" />
-      <div className="flex-1">
-        <div className="flex items-center gap-2">
-          <span className="font-bold">{user}</span>
-          <span className="text-default-500">{handle}</span>
-          <span className="text-default-500">· {time}</span>
+  <Card className='m-4 cursor-pointer rounded-2xl border-b bg-white bg-gradient-to-br from-purple-100 to-blue-100 text-black transition-all hover:bg-purple-50'>
+    <CardBody className='flex flex-row gap-4'>
+      <Avatar src='/api/placeholder/32/32' className='h-12 w-12' />
+      <div className='flex-1'>
+        <div className='flex items-center gap-2'>
+          <span className='font-bold'>{user}</span>
+          <span className='text-default-500'>{handle}</span>
+          <span className='text-default-500'>· {time}</span>
         </div>
         <p className='mt-1'>{content}</p>
         <div className='mt-4 flex max-w-md justify-start gap-4 text-default-500'>
