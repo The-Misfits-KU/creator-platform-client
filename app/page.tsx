@@ -20,7 +20,15 @@ import {
 } from '@nextui-org/react';
 
 import { motion } from 'framer-motion';
-import { Wallet2 } from 'lucide-react';
+import { ConnectButton, lightTheme } from 'thirdweb/react';
+import { client } from '@/services/thirdweb';
+import { createWallet, inAppWallet } from "thirdweb/wallets";
+ 
+const wallets = [
+  createWallet("io.metamask"),
+  createWallet("com.coinbase.wallet"),
+  createWallet("me.rainbow"),
+];
 
 // You would need to add these SVG files to your project
 const Character1 = () => (
@@ -97,36 +105,28 @@ export default function DigitalMuseum() {
             animate={{ opacity: 1, x: 0 }}
             className='text-2xl font-bold text-purple-800'
           >
-            CryptoMuseum
+            DTwin
           </motion.div>
         </NavbarBrand>
-        <NavbarContent className='hidden gap-4 sm:flex' justify='center'>
-          <NavbarItem>
-            <Link href='#' className='text-purple-800'>
-              Gallery
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link href='#' className='text-purple-800'>
-              Artists
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link href='#' className='text-purple-800'>
-              Collections
-            </Link>
-          </NavbarItem>
-        </NavbarContent>
         <NavbarContent justify='end'>
           <NavbarItem>
-            <Button
-              className='bg-purple-600/80 text-white backdrop-blur-sm hover:bg-purple-700/80'
-              variant='flat'
-              startContent={<Wallet2 size={20} />}
-              onClick={handleWalletConnect}
-            >
-              {isWalletConnected ? 'Connected' : 'Connect Wallet'}
-            </Button>
+            <ConnectButton
+              client={client}
+              wallets={wallets}
+              theme={lightTheme()}
+              detailsButton={{
+                style: {
+                  maxHeight: '50px',
+                },
+              }}
+              onConnect={(account) => {
+                window.location.href = '/dashboard';
+              }}
+              signInButton={{
+                className: 'bg-purple-600/80 text-white rounded-2xl',
+                label: 'Sign In',
+              }}
+            />
           </NavbarItem>
         </NavbarContent>
       </Navbar>
@@ -153,7 +153,7 @@ export default function DigitalMuseum() {
                 size='lg'
                 className='bg-purple-600/80 text-white backdrop-blur-sm hover:bg-purple-700/80'
               >
-                Explore Gallery
+                Connect Account
               </Button>
               <Button
                 size='lg'

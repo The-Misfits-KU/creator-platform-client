@@ -3,9 +3,11 @@ import { Suspense, useState, useEffect } from 'react';
 export default function MainContent({
   collapsed,
   active,
+  setActive,
 }: {
   collapsed: boolean;
   active: string;
+  setActive: (active: string) => void;
 }) {
   const [Component, setComponent] = useState<React.ComponentType | null>(null);
 
