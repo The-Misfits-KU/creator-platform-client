@@ -1,9 +1,16 @@
 import Cardd from '@/components/dashboard/cardd';
 import Post from '@/components/dashboard/post';
+import { useActiveAccount, useReadContract } from 'thirdweb/react';
+import { contract } from '@/utils/contracts';
 
 export default function Profile() {
   return (
-    <div>
+    <div className='col-span-8 border-x'>
+      <div className='sticky top-0 border-b bg-white/80 p-4 text-black backdrop-blur-md'>
+        <h1 className='text-xl font-bold'>Profile
+          
+        </h1>
+      </div>
       {/* Posts */}
       <Cardd
         followerscount='100'

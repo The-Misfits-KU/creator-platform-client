@@ -1,3 +1,4 @@
+'use client';
 import { Button, Input, Avatar } from '@nextui-org/react';
 import {
   Image as ImageIcon,
@@ -20,7 +21,10 @@ export default function Home() {
     params: [account?.address as string],
   });
   return (
-    <div>
+    <div className='col-span-8 border-x'>
+      <div className='sticky top-0 border-b bg-white/80 p-4 text-black backdrop-blur-md'>
+        <h1 className='text-xl font-bold'>Home</h1>
+      </div>
       <div className='m-4 rounded-2xl border-b bg-white p-4'>
         <div className='flex gap-4'>
           <Avatar className='h-12 w-12' src='/api/placeholder/48/48' />
@@ -76,7 +80,7 @@ export default function Home() {
           //   <p>{post.body}</p>
           //   <img src={post.featuredImage} alt={post.title} />
           // </div>
-          <Post key={post.id} user={post.title} content={post.body}/>
+          <Post key={post.id} user={post.title} content={post.body} />
         ))}
       {!isFeedPending && feed?.length == 0 && (
         <div className='m-4 flex items-center justify-center p-4 text-black'>

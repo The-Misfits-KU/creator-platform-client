@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@nextui-org/button';
 import {
   ChevronLeft,
@@ -10,57 +12,50 @@ import { ConnectButton, lightTheme } from 'thirdweb/react';
 
 import SidebarItem from '@/components/sidebar/item';
 import { client } from '@/services/thirdweb';
+import { useState } from 'react';
+import { link } from 'fs';
 
 const SidebarItems = [
-  { icon: Home, label: 'Home' },
-  { icon: Search, label: 'Explore' },
-  { icon: UserCircle, label: 'Profile' },
+  { icon: Home, label: 'Home', link: '/dashboard' },
+  { icon: Search, label: 'Explore', link: '/dashboard/explore' },
+  { icon: UserCircle, label: 'Profile', link: '/dashboard/profile' },
 ];
 
-export default function Sidebar({
-  collapsed,
-  setCollapsed,
-  active,
-  setActive,
-}: {
-  collapsed: boolean;
-  setCollapsed: (collapsed: boolean) => void;
-  active: string;
-  setActive: (active: string) => void;
-}) {
+export default function Sidebar() {
+  const [collapsed, setCollapsed] = useState(false);
   return (
     <div
       className={`${collapsed ? 'col-span-1' : 'col-span-2'} relative max-h-screen bg-white shadow-lg transition-all duration-300`}
     >
       <Button
         isIconOnly
-        className='absolute z-50 bg-purple-600 rounded-full shadow-lg -right-3 top-6'
+        className='absolute -right-3 top-6 z-50 rounded-full bg-purple-600 shadow-lg'
         variant='light'
         onClick={() => setCollapsed(!collapsed)}
       >
         {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
       </Button>
-      <div className='flex flex-col justify-between h-full gap-2 p-4'>
+      <div className='flex h-full flex-col justify-between gap-2 p-4'>
         <div className='flex flex-col gap-2'>
           <div className='h-10' />
           {SidebarItems.map((item) => (
             <SidebarItem
               key={item.label}
-              active={active === item.label}
+              active={false}
               collapsed={collapsed}
               icon={item.icon}
               label={item.label}
-              onClick={() => setActive(item.label)}
+              link = {item.link}
             />
           ))}
           <Button
-            className='w-full mt-4 text-white bg-purple-600 hover:bg-purple-700'
+            className='mt-4 w-full bg-purple-600 text-white hover:bg-purple-700'
             size='lg'
           >
             {collapsed ? '+' : 'Post'}
           </Button>
         </div>
-        <ConnectButton client={client} theme={lightTheme()}/>
+        <ConnectButton client={client} theme={lightTheme()} />
       </div>
     </div>
   );
