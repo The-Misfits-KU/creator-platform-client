@@ -1,7 +1,8 @@
 // app/page.tsx
+
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Button,
   User,
@@ -10,7 +11,6 @@ import {
   Card,
   CardBody,
   Tooltip,
-  Divider
 } from "@nextui-org/react";
 import {
   Home,
@@ -32,37 +32,35 @@ import {
   Menu,
   MessageCircle,
   ChevronLeft,
-  ChevronRight
-} from 'lucide-react';
+  ChevronRight,
+} from "lucide-react";
 
-const SidebarItem = ({ 
-  icon: Icon, 
-  label, 
-  active = false, 
-  collapsed 
-}: { 
-  icon: any, 
-  label: string, 
-  active?: boolean,
-  collapsed: boolean 
+const SidebarItem = ({
+  icon: Icon,
+  label,
+  active = false,
+  collapsed,
+}: {
+  icon: any;
+  label: string;
+  active?: boolean;
+  collapsed: boolean;
 }) => (
-  <Tooltip
-    content={label}
-    placement="right"
-    isDisabled={!collapsed}
-  >
-    <Button 
-      className={`w-full justify-start gap-4 p-4 ${active ? 'bg-purple-100 text-purple-600' : ''}`}
+  <Tooltip content={label} placement="right" isDisabled={!collapsed}>
+    <Button
+      className={`w-full justify-start gap-4 p-4 ${
+        active ? "bg-purple-100 text-purple-600" : ""
+      }`}
       variant="light"
       startContent={<Icon size={24} className={active ? "text-purple-600" : ""} />}
     >
-      <span className={`text-lg ${collapsed ? 'hidden' : 'block'}`}>{label}</span>
+      <span className={`text-lg ${collapsed ? "hidden" : "block"}`}>{label}</span>
     </Button>
   </Tooltip>
 );
 
-const Tweet = ({ user, handle, time, content, engagement }: any) => (
-  <Card className="bg-white hover:bg-purple-50 cursor-pointer transition-all border-b rounded-none">
+const Tweet = ({ user, handle, time, content }: any) => (
+  <Card className="bg-white hover:bg-purple-50 cursor-pointer transition-all border-b rounded-none shadow-sm">
     <CardBody className="flex flex-row gap-4">
       <Avatar src="/api/placeholder/32/32" className="w-12 h-12" />
       <div className="flex-1">
@@ -98,7 +96,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-100 to-white">
       <div className="grid grid-cols-12 h-screen">
         {/* Collapsible Sidebar */}
-        <div className={`${collapsed ? 'col-span-1' : 'col-span-2'} bg-white shadow-lg transition-all duration-300 relative`}>
+        <div className={`${collapsed ? "col-span-1" : "col-span-2"} bg-white shadow-lg transition-all duration-300 relative`}>
           <Button
             isIconOnly
             variant="light"
@@ -107,7 +105,7 @@ export default function HomePage() {
           >
             {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
           </Button>
-          
+
           <div className="flex flex-col gap-2 p-4">
             <div className="p-2">
               <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
@@ -122,18 +120,15 @@ export default function HomePage() {
             <SidebarItem icon={Users} label="Communities" collapsed={collapsed} />
             <SidebarItem icon={UserCircle} label="Profile" collapsed={collapsed} />
             <SidebarItem icon={MoreHorizontal} label="More" collapsed={collapsed} />
-            
-            <Button 
-              className="w-full mt-4 bg-purple-600 text-white hover:bg-purple-700"
-              size="lg"
-            >
+
+            <Button className="w-full mt-4 bg-purple-600 text-white hover:bg-purple-700" size="lg">
               {collapsed ? "+" : "Post"}
             </Button>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className={`${collapsed ? 'col-span-7' : 'col-span-6'} border-x`}>
+        <div className={`${collapsed ? "col-span-7" : "col-span-6"} border-x`}>
           <div className="sticky top-0 backdrop-blur-md bg-white/80 border-b p-4">
             <h1 className="text-xl font-bold">Home</h1>
           </div>
@@ -143,14 +138,7 @@ export default function HomePage() {
             <div className="flex gap-4">
               <Avatar src="/api/placeholder/48/48" className="w-12 h-12" />
               <div className="flex-1">
-                <Input
-                  placeholder="What's on your mind?"
-                  variant="bordered"
-                  classNames={{
-                    input: "bg-transparent",
-                    inputWrapper: "bg-transparent"
-                  }}
-                />
+                <Input placeholder="What's on your mind?" variant="bordered" classNames={{ input: "bg-transparent", inputWrapper: "bg-transparent" }} />
                 <div className="flex justify-between mt-4">
                   <div className="flex gap-2">
                     <Button isIconOnly variant="light" size="sm">
@@ -169,11 +157,7 @@ export default function HomePage() {
                       <MapPin size={20} className="text-purple-500" />
                     </Button>
                   </div>
-                  <Button 
-                    color="primary" 
-                    size="sm"
-                    className="bg-purple-600 text-white"
-                  >
+                  <Button color="primary" size="sm" className="bg-purple-600 text-white">
                     Post
                   </Button>
                 </div>
@@ -182,72 +166,31 @@ export default function HomePage() {
           </div>
 
           {/* Posts */}
-          <Tweet 
-            user="Alex Johnson"
-            handle="@alexj"
-            time="3h"
-            content="Just launched our new product! 🚀 Check it out and let me know what you think!"
-          />
-          <Tweet 
-            user="Sarah Miller"
-            handle="@sarahm"
-            time="5h"
-            content="The sunrise this morning was absolutely breathtaking! Nature never ceases to amaze me. 🌅"
-          />
+          <Tweet user="Alex Johnson" handle="@alexj" time="3h" content="Just launched our new product! 🚀 Check it out and let me know what you think!" />
+          <Tweet user="Sarah Miller" handle="@sarahm" time="5h" content="The sunrise this morning was absolutely breathtaking! Nature never ceases to amaze me. 🌅" />
         </div>
 
         {/* Right Sidebar */}
-        <div className={`${collapsed ? 'col-span-4' : 'col-span-4'} p-4`}>
+        <div className={`${collapsed ? "col-span-4" : "col-span-4"} p-4`}>
           <Card className="bg-white mb-4">
             <CardBody>
               <Input
                 placeholder="Search"
                 startContent={<Search size={18} />}
                 className="mb-4"
-                classNames={{
-                  input: "bg-white",
-                  inputWrapper: "bg-white border-2 hover:border-purple-500"
-                }}
+                classNames={{ input: "bg-white", inputWrapper: "bg-white border-2 hover:border-purple-500" }}
               />
             </CardBody>
           </Card>
-          
+
           <Card className="bg-white mb-4">
             <CardBody>
               <h2 className="text-xl font-bold mb-4">Trending Now</h2>
               <div className="space-y-4">
-                {/* Trending items */}
-                {['Technology', 'Sports', 'Entertainment'].map((topic) => (
+                {["Technology", "Sports", "Entertainment"].map((topic) => (
                   <div key={topic} className="hover:bg-purple-50 p-2 rounded-lg cursor-pointer">
-                    <p className="text-sm text-gray-500">Trending in {topic}</p>
-                    <p className="font-semibold">#TrendingTopic</p>
-                    <p className="text-sm text-gray-500">10.5K posts</p>
-                  </div>
-                ))}
-              </div>
-            </CardBody>
-          </Card>
-
-          <Card className="bg-white">
-            <CardBody>
-              <h2 className="text-xl font-bold mb-4">Who to follow</h2>
-              <div className="space-y-4">
-                {/* Suggested users */}
-                {['John Doe', 'Jane Smith', 'Bob Wilson'].map((name) => (
-                  <div key={name} className="flex items-center justify-between">
-                    <User
-                      name={name}
-                      description="@username"
-                      avatarProps={{
-                        src: "/api/placeholder/32/32"
-                      }}
-                    />
-                    <Button 
-                      size="sm"
-                      className="bg-purple-600 text-white"
-                    >
-                      Follow
-                    </Button>
+                    <p className="font-bold">#{topic}</p>
+                    <p className="text-sm text-default-500">12k Tweets</p>
                   </div>
                 ))}
               </div>
