@@ -13,7 +13,7 @@ export async function POST(req: Request) {
       {
         id: postId,
         values: (await embedding).values,
-        metadata: { postId, userId },
+        metadata: { postId, userId, content },
       },
     ]);
 
