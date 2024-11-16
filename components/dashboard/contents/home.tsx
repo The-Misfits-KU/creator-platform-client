@@ -6,8 +6,19 @@ import {
   BarChart2,
   Calendar,
 } from 'lucide-react';
+import { useReadContract, useActiveAccount } from 'thirdweb/react';
+import { Spinner } from '@nextui-org/react';
+import { contract } from '@/utils/contracts';
+import Post from '@/components/dashboard/post';
 
 export default function Home() {
+  const account = useActiveAccount();
+  const { data: feed, isPending: isFeedPending } = useReadContract({
+    contract,
+    method:
+      'function getUserFeed(address _user) view returns ((string title, string body, string files, string featuredImage, address userId, uint256 id)[])',
+    params: [account?.address as string],
+  });
   return (
     <div>
       <div className='m-4 rounded-2xl border-b bg-white p-4'>
@@ -53,9 +64,25 @@ export default function Home() {
       </div>
 
       {/* Posts */}
-      <div className='m-4 flex items-center justify-center p-4 text-gray-500'>
-        Nothing to see here.
-      </div>
+      {isFeedPending && (
+        <div className='m-4 flex items-center justify-center p-4 text-black'>
+          <Spinner />
+        </div>
+      )}
+      {feed &&
+        feed.map((post) => (
+          // <div key={post.id}>
+          //   <h2>{post.title}</h2>
+          //   <p>{post.body}</p>
+          //   <img src={post.featuredImage} alt={post.title} />
+          // </div>
+          <Post key={post.id} user={post.title} content={post.body}/>
+        ))}
+      {!isFeedPending && feed?.length == 0 && (
+        <div className='m-4 flex items-center justify-center p-4 text-black'>
+          No Posts Found.
+        </div>
+      )}
     </div>
   );
 }

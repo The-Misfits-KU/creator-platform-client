@@ -2,10 +2,10 @@ import React from 'react';
 import { Button, Avatar, Card, CardBody } from '@nextui-org/react';
 import { MessageCircle, Repeat2, Heart, Share } from 'lucide-react';
 
-const Post = ({ user, handle, time, content, engagement }: any) => (
+const Post = ({ user, handle, time, content, imgSrc }: any) => (
   <Card className='m-4 cursor-pointer rounded-2xl border-b bg-white bg-gradient-to-br from-purple-100 to-blue-100 text-black transition-all hover:bg-purple-50'>
     <CardBody className='flex flex-row gap-4'>
-      <Avatar src='/api/placeholder/32/32' className='h-12 w-12' />
+      <Avatar src={imgSrc} className='h-12 w-12' />
       <div className='flex-1'>
         <div className='flex items-center gap-2'>
           <span className='font-bold'>{user}</span>

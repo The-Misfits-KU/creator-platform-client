@@ -13,11 +13,11 @@ export default function DashboardPage() {
   const [collapsed, setCollapsed] = useState(false);
   const [activePage, setActivePage] = useState('Home');
 
-  useEffect(()=>{
-    if(!activeAccount){
-      window.location.href = '/';
-    }
-  }, []);
+  // useEffect(()=>{
+  //   if(!activeAccount){
+  //     window.location.href = '/';
+  //   }
+  // }, []);
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-purple-100 to-white'>
