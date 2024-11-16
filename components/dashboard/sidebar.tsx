@@ -5,26 +5,22 @@ import {
   ChevronRight,
   Home,
   Search,
-  Bell,
-  Mail,
-  Bookmark,
-  Users,
   UserCircle,
-  MoreHorizontal,
 } from "lucide-react";
+import { client } from "@/services/thirdweb";
+import { ConnectButton } from "thirdweb/react";
 
 const SidebarItems = [
   { icon: Home, label: "Home" },
   { icon: Search, label: "Explore" },
   { icon: UserCircle, label: "Profile" },
-]
-
+];
 
 export default function Sidebar({
   collapsed,
   setCollapsed,
   active,
-  setActive
+  setActive,
 }: {
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
@@ -43,30 +39,27 @@ export default function Sidebar({
       >
         {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
       </Button>
-
-      <div className="flex flex-col gap-2 p-4">
-        <div className="p-2">
-          <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
-            <span className="text-white text-xl font-bold">S</span>
-          </div>
+      <div className="flex flex-col  h-full justify-between gap-2 p-4">
+        <div className="flex flex-col gap-2">
+          <div className="h-10"></div>
+          {SidebarItems.map((item) => (
+            <SidebarItem
+              key={item.label}
+              icon={item.icon}
+              label={item.label}
+              active={active === item.label}
+              collapsed={collapsed}
+              onClick={() => setActive(item.label)}
+            />
+          ))}
+          <Button
+            className="w-full mt-4 bg-purple-600 text-white hover:bg-purple-700"
+            size="lg"
+          >
+            {collapsed ? "+" : "Post"}
+          </Button>
         </div>
-        {SidebarItems.map((item) => (
-          <SidebarItem
-            key={item.label}
-            icon={item.icon}
-            label={item.label}
-            active={active === item.label}
-            collapsed={collapsed}
-            onClick={() => setActive(item.label)}
-          />
-        ))}
-
-        <Button
-          className="w-full mt-4 bg-purple-600 text-white hover:bg-purple-700"
-          size="lg"
-        >
-          {collapsed ? "+" : "Post"}
-        </Button>
+        <ConnectButton client={client} />
       </div>
     </div>
   );
