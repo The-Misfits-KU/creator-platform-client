@@ -1,6 +1,5 @@
-import { embed } from 'ai';
-
-import { pinecone, google, generateEmbedding } from '@/services/ai';
+import { pinecone, generateEmbedding } from '@/services/ai';
+import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   const { postId, content, userId } = await req.json();
@@ -16,16 +15,18 @@ export async function POST(req: Request) {
         metadata: { postId, userId, content },
       },
     ]);
-
-    return new Response(
-      JSON.stringify({ message: 'Post stored successfully' }),
+    return NextResponse.json(
+      { message: 'Post stored successfully' },
       { status: 200 }
     );
   } catch (error) {
     console.error('Error storing post:', error);
 
-    return new Response(JSON.stringify({ message: 'Error storing post' }), {
-      status: 500,
-    });
+    return NextResponse.json(
+      { message: 'Error storing post' },
+      {
+        status: 500,
+      }
+    );
   }
 }

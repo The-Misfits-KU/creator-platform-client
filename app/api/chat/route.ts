@@ -1,48 +1,73 @@
 import { pinecone, google, generateEmbedding } from '@/services/ai';
 import prompt from '@/utils/constants';
+import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   const { messages, postId, userId } = await req.json();
+
+  // Validate userId
   if (!userId) {
-    return new Response(JSON.stringify({ error: 'userId is required' }), {
-      status: 400,
-    });
+    return NextResponse.json({ error: 'userId is required' }, { status: 400 });
   }
-  let filter: any = { user:  {"$eq": userId} };
-  if (postId != null) {
-    filter = {'$and': [{ user:  {"$eq": userId} }, { postId: {"$ne": postId}}]};
+
+  // Build filter based on postId and userId
+  let filter: any = { userId: userId };
+
+  if (postId) {
+    filter = {
+      $and: [{ userId: userId }, { postId: postId }],
+    };
   }
+
+  console.log('filter:', filter);
+
+  // Get the last message
   const last_message = messages[messages.length - 1];
 
   try {
+    // Access Pinecone index
     const index = pinecone.Index(process.env.PINECONE_INDEX as string);
+
+    // Generate embedding for the last message
     const embedding = await generateEmbedding(last_message);
+
+    // Query Pinecone with filter
     const queryResults = await index.query({
       topK: 5,
       vector: embedding.values,
-      // filter: filter,
+      filter: filter, // Apply filter
       includeMetadata: true,
     });
+
     console.log('queryResults:', queryResults);
-    let retrived: string[] = [];
-    queryResults.matches.forEach(async (match) => {
+
+    // Retrieve content from the query results
+    let retrieved: string[] = [];
+    queryResults.matches.forEach((match) => {
       const { metadata } = match;
-      metadata && retrived.push(metadata.content as string);
+      if (metadata?.content) {
+        retrieved.push(metadata.content as string);
+      }
     });
-    console.log('retrived:', retrived);
+
+    console.log('retrieved:', retrieved);
+
+    // Generate content with Google Gemini model
     const model = google.getGenerativeModel({
       model: 'models/gemini-1.5-flash-8b',
     });
-    const prompt_message = prompt(retrived, last_message);
+
+    const prompt_message = prompt(retrieved, last_message);
     console.log(prompt_message);
+
     const res = await model.generateContent(prompt_message);
-    return new Response(JSON.stringify({ messages: res.response.text() }), {
-      status: 200,
-    });
+
+    return NextResponse.json(
+      { messages: res.response.text(), retrieved: retrieved },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Error fetching messages:', error);
-    return new Response(JSON.stringify({ error: error }), {
-      status: 500,
-    });
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }
