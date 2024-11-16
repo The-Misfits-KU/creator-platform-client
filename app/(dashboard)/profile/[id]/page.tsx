@@ -7,6 +7,7 @@ import { contract } from '@/utils/contracts';
 import { useUserContext } from '@/context/UserContext';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import Chat from '@/components/ai/chat';
 
 export default function ProfilePage() {
   const account = useActiveAccount();
@@ -37,6 +38,7 @@ export default function ProfilePage() {
         <h1 className='text-xl font-bold'>Profile</h1>
       </div>
       {/* Posts */}
+
       <Cardd
         followerscount={user?.followers.length}
         followingcount={user?.following.length}
@@ -45,6 +47,7 @@ export default function ProfilePage() {
         user={user?.name}
         walletUser={walletUser}
       />
+      <Chat postId={id as string}/>
       <p className='flex justify-center mt-1 text-xl text-black'>Posts</p>
 
       <div>

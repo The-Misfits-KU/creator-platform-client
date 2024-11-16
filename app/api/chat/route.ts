@@ -3,7 +3,7 @@ import prompt from '@/utils/constants';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-  const { messages, postId, userId } = await req.json();
+  const { message, postId, userId } = await req.json();
 
   // Validate userId
   if (!userId) {
@@ -22,14 +22,13 @@ export async function POST(req: Request) {
   console.log('filter:', filter);
 
   // Get the last message
-  const last_message = messages[messages.length - 1];
-
+  console.log('message:', message);
   try {
     // Access Pinecone index
     const index = pinecone.Index(process.env.PINECONE_INDEX as string);
 
     // Generate embedding for the last message
-    const embedding = await generateEmbedding(last_message);
+    const embedding = await generateEmbedding(message);
 
     // Query Pinecone with filter
     const queryResults = await index.query({
@@ -57,7 +56,7 @@ export async function POST(req: Request) {
       model: 'models/gemini-1.5-flash-8b',
     });
 
-    const prompt_message = prompt(retrieved, last_message);
+    const prompt_message = prompt(retrieved, message);
     console.log(prompt_message);
 
     const res = await model.generateContent(prompt_message);
