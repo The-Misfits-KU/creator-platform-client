@@ -17,7 +17,7 @@ export default function DashboardPage() {
     if(!activeAccount){
       window.location.href = '/';
     }
-  }, [activeAccount]);
+  }, []);
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-purple-100 to-white'>

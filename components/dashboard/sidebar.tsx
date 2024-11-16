@@ -6,7 +6,7 @@ import {
   Search,
   UserCircle,
 } from 'lucide-react';
-import { ConnectButton } from 'thirdweb/react';
+import { ConnectButton, lightTheme } from 'thirdweb/react';
 
 import SidebarItem from '@/components/sidebar/item';
 import { client } from '@/services/thirdweb';
@@ -60,7 +60,7 @@ export default function Sidebar({
             {collapsed ? '+' : 'Post'}
           </Button>
         </div>
-        <ConnectButton client={client} />
+        <ConnectButton client={client} theme={lightTheme()}/>
       </div>
     </div>
   );
